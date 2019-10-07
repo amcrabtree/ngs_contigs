@@ -1,4 +1,4 @@
-# amc_repo1
+# ngs_contigs
 
 
 Greetings Dear Reader,
