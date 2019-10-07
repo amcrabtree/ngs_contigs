@@ -1,6 +1,7 @@
 Greetings Dear Reader,
 
-I would like to introduce you to my very first git repository. The intention is to provide a selection of R scripts for visualizing Next-Generation sequencing of yeast viruses.
+This repository provides a selection of R scripts for visualizing Next-Generation sequencing of yeast viruses.
+
 
   ngs_cov_across_contig_area_graphs.R 
   ----------------
