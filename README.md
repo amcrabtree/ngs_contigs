@@ -1,6 +1,6 @@
 Greetings Dear Reader,
 
-This repository provides a selection of R scripts for visualizing Next-Generation sequencing of yeast viruses.
+This repository provides a selection of R scripts for visualizing Next-Generation sequencing results. This script was originally produced for sequencing of dsRNA elements within yeast.
 <p>&nbsp;</p>
 
   mapped_reads_area_graphs.R
