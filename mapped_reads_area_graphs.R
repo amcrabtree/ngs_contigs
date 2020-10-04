@@ -25,13 +25,13 @@ main <- function() {
   }
   # graph height option (argument #3)
   if (is.na(args[3])==FALSE){
-    grheight = args[3]
+    grheight = as.numeric(args[3])
   } else {
     grheight = 3
   }
   # graph width option (argument #4)
   if (is.na(args[4])==FALSE){
-    grwidth = args[4]
+    grwidth = as.numeric(args[4])
   } else {
     grwidth = 5
   }
