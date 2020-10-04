@@ -1,38 +1,71 @@
-# contig_quality_dot_plot.R
-# This R script makes a dot plot of length v. coverage of contigs 
-# generated from de novo assembly of Illumina NGS data
+#!/usr/bin/env Rscript
 
-# clear working environment and set work 
-remove(list=ls())
-setwd("~/Downloads/")
-library(ggplot2)
-library(ggrepel)
-
-# Import data from pre-formatted dataset.
-# You can format this dataset from the original fasta file by using BBedit grep tools
-cov63717 <- read.csv('Y63717_contigs_R.csv', header = TRUE)
-attach(cov63717)
-
-#trim contigs <200bp and/or <20 reads
-cov63717 = cov63717[cov63717$length > 200,]
-cov63717 = cov63717[cov63717$cov > 20,]
-
-# dot plot 1
-# shows contigs >700 bp in length, labeled for reference
-ggplot(data=cov63717, aes(x=length, y=cov)) +
-  geom_point(size=1.5, color="blue") +
-  theme_classic() +
-  labs ( x = "Length (bp)", y = "Coverage Score", 
-         title = "Coverage of S. cerevisiae Y-63717") +
-  geom_text(aes(label=ifelse(length>700,as.character(node),'')),hjust=0,vjust=-.5)
-
-# dot plot 2
-# this style has transparent points and log10 scale on y-axis (coverage)
-ggplot(cov63717, aes(x=length, y=cov)) +
-  coord_trans(y = "log10") +
-  geom_point(size=3, alpha=0.5) +
-  theme_classic() +
-  labs(x="Contig Length", y="Contig Coverage") +
-  theme(axis.title = element_text(size = 16, face="bold"), 
-        axis.text.y = element_text(size=14), 
-        axis.text.x = element_text(size=14)) 
+main <- function() {
+  ## open libraries
+  packages = c('ggplot2','stringr')
+  # check.packages function: install and load multiple R packages.
+  # Check to see if packages are installed. Install them if they are not, then load them into the R session.
+  check.packages <- function(pkg){
+    new.pkg <- pkg[!(pkg %in% installed.packages()[, "Package"])]
+    if (length(new.pkg)) 
+      install.packages(new.pkg, dependencies = TRUE, repo="http://cran.rstudio.com/")
+    sapply(pkg, require, character.only = TRUE)
+  }
+  msg.trap <- capture.output( suppressMessages( check.packages(packages)) ) # silent mode
+  
+  ## parse arguments
+  args <- commandArgs(trailingOnly = TRUE)
+  ## parse arguments
+  file <- args[1]  ## needed for importing data
+  # output option (argument #2)
+  if (is.na(args[2])==FALSE){
+    gextension = args[2]
+  } else {
+    output_file=paste(str_split(file, "[.]")[[1]][1],'.jpeg',sep="")
+  }
+  # graph height option (argument #3)
+  if (is.na(args[3])==FALSE){
+    grheight = args[3]
+  } else {
+    grheight = 5
+  }
+  # graph width option (argument #4)
+  if (is.na(args[4])==FALSE){
+    grwidth = args[4]
+  } else {
+    grwidth = 6
+  }
+  
+  
+  #****************** MAIN SCRIPT *******************
+  
+  ## Read data from pre-formatted dataset.
+  filename = sapply(str_split(file, "[/]"), tail, 1)
+  filename_v = as.vector(unlist(str_split(filename, "_")))
+  samplename = paste(filename_v[1:(length(filename_v)-1)], collapse=" ")
+  contigs = read.delim(file, header = FALSE, sep = '_') # parses file by underscore and newline
+  contigs <- na.omit(contigs) # removes rows with 'NA'
+  contigs$sample = rep(samplename,nrow(contigs)) # name a new row with sample name
+  contigs <- contigs[, c(7, 2, 4, 6)] # only include relevant columns
+  row.names(contigs) <- 1:nrow(contigs) # renumber rows after reordering
+  colnames(contigs) = c('sample','node','len','cov') # rename column headers
+  contigs = contigs[which(contigs$len>150),] # delete contigs 150bp or less
+  
+  ############## AREA PLOT #################
+  ggplot(contigs, aes(x=len, y=cov)) +
+    coord_trans(y = "log10") +
+    geom_point(size=3, alpha=0.5) +
+    theme_classic() +
+    labs(x="Contig Length", y="Contig Coverage", 
+         title=paste(samplename," de novo Contigs")) +
+    theme(axis.title = element_text(size = 16, face="bold"), 
+          axis.text.y = element_text(size=14), 
+          axis.text.x = element_text(size=14)) +
+    geom_text(aes(label=ifelse(len>(max(len)*(1/2)),as.character(node),'')),
+              hjust=0,vjust=-.5, color='red')
+  
+  ggsave(filename=output_file, height=as.numeric(grheight),
+         width=as.numeric(grwidth))
+  
+}
+main()
