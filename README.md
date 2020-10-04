@@ -12,7 +12,7 @@ This repository provides a selection of R scripts for visualizing Next-Generatio
 Rscript CL_contig_graph.R SAMPLE_NAME_contigs.fasta
 ```
 
-![BJH001_L-BC_read_depth.jpeg](https://raw.githubusercontent.com/amcrabtree/ngs_contigs/master/images/BJH001_L-BC_read_depth.jpeg)
+![BJH001_L-BC_read_depth2.jpeg](https://raw.githubusercontent.com/amcrabtree/ngs_contigs/master/images/BJH001_L-BC_read_depth2.jpeg)
     
   mapped_reads_area_graphs.R
   ----------------
@@ -23,4 +23,4 @@ Rscript CL_contig_graph.R SAMPLE_NAME_contigs.fasta
 Rscript CL_contig_graph.R SAMPLE_NAME_contigs.fasta
 ```
 
-![YO1622_2020_contigs.jpeg](https://raw.githubusercontent.com/amcrabtree/ngs_contigs/master/images/YO1622_2020_contigs.jpeg)
+![YO1622_2020_contigs2.jpeg](https://raw.githubusercontent.com/amcrabtree/ngs_contigs/master/images/YO1622_2020_contigs2.jpeg)
